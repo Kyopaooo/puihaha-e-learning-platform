@@ -1,77 +1,234 @@
-# Membership Management and Transaction Processing System
+# Puihaha E-Learning Platform
 
-Laravel member-management module with member registration, profile viewing, editing, deactivation, and search/filtering by name, category, and membership level.
+Puihaha is a Laravel-based e-learning and membership management platform. It combines course delivery, student learning progress, membership administration, transaction processing, and payment records in one application.
 
-## Setup
+## Main Features
 
-1. Create a MySQL database in XAMPP/phpMyAdmin.
-2. Copy `.env.example` to `.env` and set `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD`.
-3. Import `database/membership_management.sql` in phpMyAdmin, or run `php artisan migrate`.
-4. Run `php artisan serve`, then open the displayed local URL.
+### Administrator
+- Manage member profiles, categories, and membership levels.
+- Link student login accounts to member profiles.
+- Review and approve membership transactions.
+- Record payments and view transaction/payment history.
+- Manage courses and lessons.
+- View dashboard statistics, current learning-center weather, and the learning-center map.
 
-The application redirects the home page to `/members`. New member codes are generated automatically (for example, `MEM-20261028123000-123`). Deleting a member is implemented as deactivation so the membership record is retained.
+### Instructor
+- Create and manage courses.
+- Add, edit, publish, and unpublish lessons.
+- Upload learning materials to lessons.
+- View students enrolled in their courses and monitor learning progress.
 
-## Main routes
+### Student
+- Register and verify an email address.
+- Browse published courses and enroll.
+- Access lesson content and available learning materials.
+- Mark lessons as completed and view course progress.
+- View membership information and transaction/payment history.
 
-- `GET /members` — member list and search
-- `GET /members/create` — registration form
-- `GET /members/{member}` — member profile
-- `GET /members/{member}/edit` — edit form
+## Technologies
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+- PHP 8.2 or later
+- Laravel 12
+- MySQL / MariaDB
+- Blade templates
+- HTML, CSS, and JavaScript
+- Leaflet and OpenStreetMap for interactive maps
+- Open-Meteo for current weather information
 
-## About Laravel
+The map and weather integrations in this version use Leaflet/OpenStreetMap and Open-Meteo. They do not require Google Maps API keys. OpenStreetMap attribution is displayed in the map interface. Open-Meteo data is attributed in the weather panel.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requirements
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Install the following before setting up the project:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+
+- Composer
+- MySQL or MariaDB (XAMPP can be used on Windows)
+- PHP extensions required by Laravel 12, including OpenSSL, PDO, Mbstring, Tokenizer, XML, Ctype, JSON, and Fileinfo
 
-## Learning Laravel
+Node.js and npm are only needed if you intend to rebuild frontend assets through Vite. The project includes its public stylesheet under `public/css`.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Get the project
 
-## Laravel Sponsors
+Clone the repository:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/Kyopaooo/puihaha-e-learning-platform.git
+cd puihaha-e-learning-platform
+```
 
-### Premium Partners
+### 2. Install PHP dependencies
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+composer install
+```
 
-## Contributing
+### 3. Create the environment file
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Copy `.env.example` to `.env`.
 
-## Code of Conduct
+On Windows PowerShell:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```powershell
+Copy-Item .env.example .env
+```
 
-## Security Vulnerabilities
+Update the database settings in `.env` to match your local MySQL configuration:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+APP_NAME="Puihaha E-Learning Platform"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
 
-## License
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=puihaha_test
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Generate the Laravel application key:
+
+```bash
+php artisan key:generate
+```
+
+### 4. Set up the database
+
+There are two ways to prepare the database. Choose **one** method.
+
+#### Option A: Import the demonstration database
+
+1. Start Apache and MySQL in XAMPP.
+2. Open phpMyAdmin.
+3. Create a database named `puihaha_test`.
+4. Select that database and use the **Import** tab.
+5. Import `database/puihaha_test_demo.sql`.
+6. Confirm that `.env` uses the same database name and credentials.
+
+The demonstration SQL export contains the saved database structure and sample data from the project. Use the included demo records for evaluation.
+
+#### Option B: Build a fresh database with migrations and seeders
+
+If you do not want to use the demonstration SQL export:
+
+1. Create an empty MySQL database named `puihaha_test`.
+2. Configure `.env` to connect to it.
+3. Run:
+
+```bash
+php artisan migrate --seed
+```
+
+The seeder creates initial demonstration accounts and default membership/course categories and membership levels.
+
+**Important:** Do not run `php artisan migrate:fresh` on a database containing data you want to keep. It drops existing tables.
+
+### 5. Finish Laravel setup
+
+Run:
+
+```bash
+php artisan optimize:clear
+php artisan storage:link
+```
+
+If the `storage:link` command reports that the link already exists, the link may already be configured.
+
+### 6. Configure email verification
+
+Email verification requires a working mail transport. The `.env.example` uses the `log` mailer for local development, which writes messages to the Laravel log instead of sending them to an inbox.
+
+To send verification messages through SMTP, configure your own mail settings in `.env`. Example structure:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=your-smtp-host
+MAIL_PORT=587
+MAIL_USERNAME=your-email-username
+MAIL_PASSWORD=your-email-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your-verified-sender-address
+MAIL_FROM_NAME="Puihaha E-Learning Platform"
+```
+
+Use your own SMTP provider's values. Never commit real email passwords or app passwords to GitHub.
+
+### 7. Run the application
+
+```bash
+php artisan serve
+```
+
+Open:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Demonstration Accounts
+
+The database seeder defines these initial demonstration accounts:
+
+| Role | Email | Initial password for newly seeded accounts |
+|---|---|---|
+| Administrator | `admin@puihaha.test` | `ChangeMe123!` |
+| Instructor | `instructor@puihaha.test` | `ChangeMe123!` |
+| Student | `student@puihaha.test` | `ChangeMe123!` |
+
+The seeder uses `firstOrCreate`. If an account already exists in an imported database, running the seeder does not reset that account's password. The listed password is therefore only guaranteed for accounts created by the seeder on a fresh database.
+
+Change demonstration passwords before any real deployment. These `.test` email addresses are for local demonstration and do not receive real email.
+
+## Learning Center Location and Weather
+
+The dashboard weather panel reads the active learning center's latitude and longitude from the `learning_centers` table. The demonstration location is FEU Institute of Technology, Manila:
+
+- Latitude: `14.604167`
+- Longitude: `120.988611`
+
+If the imported database does not already contain these coordinates, update the learning-center record in phpMyAdmin or through a database administration tool. For example:
+
+```sql
+UPDATE learning_centers
+SET latitude = 14.604167,
+    longitude = 120.988611
+WHERE name = 'Puihaha Main Learning Center';
+```
+
+The application retrieves current weather data from Open-Meteo and caches the response for 15 minutes. Weather display requires an internet connection from the PHP server.
+
+The member form uses Leaflet with OpenStreetMap tiles to select and save member coordinates. The dashboard map displays the configured learning-center location. Public OpenStreetMap tile services have a usage policy; retain attribution and avoid bulk downloads or high-volume use.
+
+## Database and Data Safety
+
+- Keep `.env` private. It contains local database and mail credentials.
+- Do not commit real API keys, SMTP passwords, or other secrets.
+- The demonstration SQL file should contain only sample information suitable for sharing.
+- Use fictional or dedicated demo email addresses and phone numbers in public demonstration data.
+- Passwords are stored as hashes, not plain text. Use dedicated demonstration accounts and change their passwords before real deployment.
+- Back up the database before importing or modifying it.
+
+## Useful Commands
+
+```bash
+# Clear Laravel's cached configuration, routes, and views
+php artisan optimize:clear
+
+# List registered routes
+php artisan route:list
+
+# Run automated tests
+php artisan test
+
+# Start the local development server
+php artisan serve
+```
+
+## Repository
+
+GitHub: https://github.com/Kyopaooo/puihaha-e-learning-platform
