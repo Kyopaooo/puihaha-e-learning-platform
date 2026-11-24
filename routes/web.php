@@ -1,12 +1,11 @@
 <?php
 
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AuthController, DashboardController, MemberController, CategoryController,
     LevelController, TransactionController, PaymentController, CourseController,
-    LessonController
+    LessonController, InstructorEnrollmentController, StudentPortalController,
+    LearningMaterialController
 };
 
 Route::get('/', fn () => auth()->check()
@@ -23,16 +22,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/email/verify', [AuthController::class, 'verificationNotice'])
-        ->name('verification.notice');
-
+    Route::get('/email/verify', [AuthController::class, 'verificationNotice'])->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
+        ->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
     Route::post('/email/verification-notification', [AuthController::class, 'resendVerification'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
+        ->middleware('throttle:6,1')->name('verification.send');
 
     Route::middleware('verified')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -58,6 +52,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/transactions/{transaction}/payments', [PaymentController::class, 'store'])->name('payments.store');
         Route::get('/payments/{payment}/receipt', [PaymentController::class, 'receipt'])->name('payments.receipt');
 
+        Route::get('/my-membership', [StudentPortalController::class, 'membership'])
+            ->name('student.membership');
+
         Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
         Route::get('/courses/manage', [CourseController::class, 'manage'])->name('courses.manage');
         Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
@@ -68,11 +65,19 @@ Route::middleware('auth')->group(function () {
         Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
         Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
 
+        Route::get('/courses/{course}/enrollments', [InstructorEnrollmentController::class, 'index'])
+            ->name('courses.enrollments');
+
         Route::post('/courses/{course}/lessons', [LessonController::class, 'store'])->name('lessons.store');
         Route::get('/courses/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
         Route::get('/courses/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
         Route::put('/courses/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
         Route::delete('/courses/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
         Route::post('/courses/{course}/lessons/{lesson}/complete', [LessonController::class, 'complete'])->name('lessons.complete');
+
+        Route::post('/courses/{course}/lessons/{lesson}/materials', [LearningMaterialController::class, 'store'])
+            ->name('materials.store');
+        Route::get('/courses/{course}/lessons/{lesson}/materials/{material}', [LearningMaterialController::class, 'download'])
+            ->name('materials.download');
     });
 });
