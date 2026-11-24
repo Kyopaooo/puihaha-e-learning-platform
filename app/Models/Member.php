@@ -1,0 +1,4 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+class Member extends Model { protected $fillable=['user_id','member_code','first_name','last_name','email','phone','address','category','level','status','joined_at','membership_category_id','membership_level_id','latitude','longitude','expires_at']; protected function casts(): array{return ['joined_at'=>'date','expires_at'=>'date','latitude'=>'decimal:7','longitude'=>'decimal:7'];} public function user(){return $this->belongsTo(User::class);} public function membershipCategory(){return $this->belongsTo(MembershipCategory::class);} public function membershipLevel(){return $this->belongsTo(MembershipLevel::class);} public function transactions(){return $this->hasMany(MembershipTransaction::class);} public function getFullNameAttribute(): string{return trim($this->first_name.' '.$this->last_name);} }
