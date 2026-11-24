@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\{Course, CourseCategory, MembershipLevel, Enrollment};
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -116,10 +117,34 @@ class CourseController extends Controller
 
     public function destroy(Course $course)
     {
-        abort_unless(auth()->user()->role === 'admin' || $course->instructor_id === auth()->id(), 403);
+        $user = auth()->user();
+
+        abort_unless(
+            $user->role === 'admin'
+            || ($user->role === 'instructor' && (int) $course->instructor_id === (int) $user->id),
+            403
+        );
+
+        // Collect uploaded lesson-material paths before the database cascades delete the related rows.
+        $materialPaths = $course->lessons()
+            ->with('materials')
+            ->get()
+            ->flatMap(fn ($lesson) => $lesson->materials->pluck('file_path'))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        // The foreign keys in the learning-table migration cascade-delete lessons,
+        // learning-material records, enrollments, and student progress.
         $course->delete();
 
-        return back()->with('success', 'Course deleted.');
+        // Remove the corresponding uploaded files from Laravel's default storage disk.
+        if (! empty($materialPaths)) {
+            Storage::delete($materialPaths);
+        }
+
+        return redirect()->route('courses.manage')->with('success', 'Course deleted.');
     }
 
     public function enroll(Course $course)
